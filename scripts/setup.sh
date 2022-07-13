@@ -85,10 +85,51 @@ install_dependecy() {
   && sudo apt install certbot
 }
 
+# generate cert
+sudo certbot --apache -d $domain
+
 # install_dependecy
 install_dependecy
 
-# setup turnserver.conf
+setup_turnserver() {
+  sed -i -e "$ a # internal ip" /etc/turnserver.conf
+  sed -i -e "$ a listening-ip=${listen_ip}" /etc/turnserver.conf
+  sed -i -e "$ a relay-ip=${listen_ip}\n" /etc/turnserver.conf
 
-# generate cert
-sudo certbot --apache -d $domain
+  sed -i -e "$ a # global ip" /etc/turnserver.conf
+  sed -i -e "$ a external-ip=${external_ip}\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # for an IP under NAT like amazon: internal_ip/external_ip" /etc/turnserver.conf
+  sed -i -e "$ a external-ip=${listen_ip}/${external_ip}\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # enable authentication for user" /etc/turnserver.conf
+  sed -i -e "$ a lt-cred-mech\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # define realm" /etc/turnserver.conf
+  sed -i -e "$ a realm=${domain}\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # define user and password (usr:pass)" /etc/turnserver.conf
+  sed -i -e "$ a user=${user}:${password}" /etc/turnserver.conf
+  sed -i -e "$ a cli-password=${password}\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # define user and password (usr:pass)" /etc/turnserver.conf
+  sed -i -e "$ a no-tlsv1" /etc/turnserver.conf
+  sed -i -e "$ a no-tlsv1_1\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # DH Key bit length for tls" /etc/turnserver.conf
+  sed -i -e "$ a dh-file=/usr/lib/python3/dist-packages/certbot/ssl-dhparams.pem\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # log config" /etc/turnserver.conf
+  sed -i -e "$ a log-file=/var/log/coturn.log" /etc/turnserver.conf
+  sed -i -e "$ a simple-log\n" /etc/turnserver.conf
+
+  sed -i -e "$ a # ssl" /etc/turnserver.conf
+  sed -i -e "$ a cert=/etc/letsencrypt/live/${domain}/fullchain.pem" /etc/turnserver.conf
+  sed -i -e "$ a cert=/etc/letsencrypt/live/${domain}/privkey.pem\n" /etc/turnserver.conf
+}
+
+# setup turnserver.conf
+setup_turnserver
+
+# start turnserver
+sudo turnserver -o  -c /etc/turnserver.conf

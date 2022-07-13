@@ -92,9 +92,14 @@ sudo certbot --apache -d $domain
 install_dependecy
 
 setup_turnserver() {
-  cp /dev/null /etc/turnserver.conf
+  sed -i '/#/d' /etc/turnserver.conf &
+  pid1=$!
+  sed -i '/^$/d' /etc/turnserver.conf &
+  pid2=$!
+  wait $pid1 $pid2
 
-  sed -i -e "$ a # internal ip" /etc/turnserver.conf
+  sed -i '/^$/d' /etc/turnserver.conf
+  sed -i -e "1i # internal ip" /etc/turnserver.conf
   sed -i -e "$ a listening-ip=${listen_ip}" /etc/turnserver.conf
   sed -i -e "$ a relay-ip=${listen_ip}\n" /etc/turnserver.conf
 
@@ -129,6 +134,7 @@ setup_turnserver() {
   sed -i -e "$ a cert=/etc/letsencrypt/live/${domain}/fullchain.pem" /etc/turnserver.conf
   sed -i -e "$ a cert=/etc/letsencrypt/live/${domain}/privkey.pem\n" /etc/turnserver.conf
 }
+
 
 # setup turnserver.conf
 setup_turnserver

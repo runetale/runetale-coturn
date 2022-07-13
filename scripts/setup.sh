@@ -135,7 +135,6 @@ setup_turnserver() {
   sed -i -e "$ a cert=/etc/letsencrypt/live/${domain}/privkey.pem\n" /etc/turnserver.conf
 }
 
-
 # setup turnserver.conf
 setup_turnserver
 

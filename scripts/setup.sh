@@ -92,6 +92,8 @@ sudo certbot --apache -d $domain
 install_dependecy
 
 setup_turnserver() {
+  cp /dev/null /etc/turnserver.conf
+
   sed -i -e "$ a # internal ip" /etc/turnserver.conf
   sed -i -e "$ a listening-ip=${listen_ip}" /etc/turnserver.conf
   sed -i -e "$ a relay-ip=${listen_ip}\n" /etc/turnserver.conf

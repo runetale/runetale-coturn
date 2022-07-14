@@ -139,4 +139,4 @@ setup_turnserver() {
 setup_turnserver
 
 # start turnserver
-sudo turnserver -o  -c /etc/turnserver.conf
+sudo turnserver -o -c /etc/turnserver.conf

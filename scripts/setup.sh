@@ -85,11 +85,11 @@ install_dependecy() {
   && sudo apt install certbot
 }
 
-# generate cert
-sudo certbot --apache -d $domain
-
 # install_dependecy
 install_dependecy
+
+# generate cert
+sudo certbot --apache -d $domain
 
 setup_turnserver() {
   sed -i '/#/d' /etc/turnserver.conf &

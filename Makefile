@@ -1,0 +1,12 @@
+DOMAIN=
+INTERNAL_IP=
+INTERNAL_PORT=
+TLS_LISTENING_PORT=
+EXTERNAL_IP=
+USER=
+PASSWORD=
+
+.PHONY: setup
+
+setup:
+	sudo sh scripts/setup.sh -d ${DOMAIN} -i ${INTERNAL_IP} -p ${INTERNAL_PORt} -t ${TLS_LISTENING_PORT} -e ${EXTERNAL_IP} -u ${USER} -w ${PASSWORD}

@@ -1,4 +1,4 @@
-# dotshake-stun-turn
+# runetale-coturn
 implementation of STUN-TURN server using coturn.
 only setup by Ubuntu is supported yet
 
